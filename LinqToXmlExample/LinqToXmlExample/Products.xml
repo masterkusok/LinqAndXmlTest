@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Products>
+	<product Name="Gaming Pc" Type="electronics" Price="1000" Id="1" Url="https://vrlatech.com/wp-content/uploads/2022/04/2O5A1015-HDR-Edit.jpg"/>
+	<product Name="Burger" Type="food" Price="5" Id="2" Url="https://nevafood.ru/wp-content/uploads/2017/07/burger-ayam.jpg"/>
+	<product Name="Prada boots" Type="fashion" Price="500" Id="3" Url="https://img.mytheresa.com/1088/1088/66/jpeg/catalog/product/e0/P00494093.jpg"/>
+</Products>
