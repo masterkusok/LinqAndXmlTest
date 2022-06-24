@@ -19,6 +19,7 @@ namespace LinqToXmlExample
             SetProductsToListView();
             GetProductTypesFromList();
             SetProductTypesToComboBox();
+            SetTrackBarMinAndMaxValues();
         }
 
         private void LoadProductsFromXML()
@@ -98,6 +99,50 @@ namespace LinqToXmlExample
             }
         }
 
+        private void SetTrackBarMinAndMaxValues()
+        {
+            minPriceTrackBar.Minimum = GetLowestProductPrice();
+            minPriceTrackBar.Maximum = GetMidProductPrice();
+
+            maxPriceTrackBar.Minimum = GetMidProductPrice();
+            maxPriceTrackBar.Maximum = GetHighestProductPrice();
+
+            maxPriceTrackBar.Value = maxPriceTrackBar.Maximum;
+
+            minPriceValueLabel.Text = minPriceTrackBar.Value.ToString() + "$";
+            maxPriceValueLabel.Text = maxPriceTrackBar.Value.ToString() + "$";
+        }
+
+        private int GetLowestProductPrice()
+        {
+            int lowest = int.MaxValue;
+            foreach(Product product in _allProducts)
+            {
+                lowest = Math.Min(lowest, product.Price);
+            }
+            return lowest;
+        }
+
+        private int GetHighestProductPrice()
+        {
+            int highest = 0;
+            foreach (Product product in _allProducts)
+            {
+                highest = Math.Max(highest, product.Price);
+            }
+            return highest;
+        }
+
+        private int GetMidProductPrice()
+        {
+            int average = 0;
+            foreach(Product product in _allProducts)
+            {
+                average += product.Price;
+            }
+            return average/_allProducts.Count();
+        }
+
         private void ApplyFiltersBtn_Click(object sender, EventArgs e)
         {
             ApplyFilters();
@@ -122,6 +167,7 @@ namespace LinqToXmlExample
                 searchKeyword = SearchTextBox.Text;
 
             LeaveOnlyNeccessaryProductTypeInList(choosenType);
+            ApplyPriceFilter();
             SortProductList(choosenSort);
             ApplySearchByKeyWord(searchKeyword);
         }
@@ -140,6 +186,27 @@ namespace LinqToXmlExample
                     _selectedProducts.Add(product);
             }
         }
+
+        private void ApplyPriceFilter()
+        {
+            int minPrice = minPriceTrackBar.Value;
+            int maxPrice = maxPriceTrackBar.Value;
+
+            for(int i = 0; i < _selectedProducts.Count; i++)
+            {
+                if(ProductPriceIsOutOfPriceRange(_selectedProducts[i], minPrice, maxPrice))
+                {
+                    _selectedProducts.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private bool ProductPriceIsOutOfPriceRange(Product product, int minPrice, int maxPrice)
+        {
+            return product.Price > maxPrice || product.Price < minPrice;
+        }
+
         private void SortProductList(string choosenSort)
         {
             switch (choosenSort)
@@ -246,7 +313,7 @@ namespace LinqToXmlExample
             {
                 if (ProductNameDoesNotContainKeyword(_selectedProducts[i], keyword))
                 {
-                    _selectedProducts.Remove(_selectedProducts[i]);
+                    _selectedProducts.RemoveAt(i);
                     i--;
                 }
             }
@@ -255,6 +322,16 @@ namespace LinqToXmlExample
         private bool ProductNameDoesNotContainKeyword(Product product, string keyword)
         {
             return !product.Name.ToLower().Contains(keyword.ToLower());
+        }
+
+        private void minPriceTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            minPriceValueLabel.Text = minPriceTrackBar.Value.ToString() + "$";
+        }
+
+        private void maxPriceTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            maxPriceValueLabel.Text = maxPriceTrackBar.Value.ToString() + "$";
         }
     }
 }

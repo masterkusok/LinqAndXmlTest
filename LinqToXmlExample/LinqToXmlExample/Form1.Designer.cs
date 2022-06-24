@@ -36,6 +36,8 @@
             this.minPriceTrackBar = new System.Windows.Forms.TrackBar();
             this.maxPriceTrackBar = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
+            this.minPriceValueLabel = new System.Windows.Forms.Label();
+            this.maxPriceValueLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.minPriceTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxPriceTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -43,9 +45,9 @@
             // GoodsListView
             // 
             this.GoodsListView.BackColor = System.Drawing.Color.Ivory;
-            this.GoodsListView.Location = new System.Drawing.Point(12, 83);
+            this.GoodsListView.Location = new System.Drawing.Point(12, 111);
             this.GoodsListView.Name = "GoodsListView";
-            this.GoodsListView.Size = new System.Drawing.Size(726, 357);
+            this.GoodsListView.Size = new System.Drawing.Size(726, 329);
             this.GoodsListView.TabIndex = 0;
             this.GoodsListView.UseCompatibleStateImageBehavior = false;
             // 
@@ -94,10 +96,11 @@
             // 
             // minPriceTrackBar
             // 
-            this.minPriceTrackBar.Location = new System.Drawing.Point(547, 31);
+            this.minPriceTrackBar.Location = new System.Drawing.Point(531, 31);
             this.minPriceTrackBar.Name = "minPriceTrackBar";
             this.minPriceTrackBar.Size = new System.Drawing.Size(92, 56);
             this.minPriceTrackBar.TabIndex = 5;
+            this.minPriceTrackBar.ValueChanged += new System.EventHandler(this.minPriceTrackBar_ValueChanged);
             // 
             // maxPriceTrackBar
             // 
@@ -105,6 +108,7 @@
             this.maxPriceTrackBar.Name = "maxPriceTrackBar";
             this.maxPriceTrackBar.Size = new System.Drawing.Size(109, 56);
             this.maxPriceTrackBar.TabIndex = 6;
+            this.maxPriceTrackBar.ValueChanged += new System.EventHandler(this.maxPriceTrackBar_ValueChanged);
             // 
             // label1
             // 
@@ -115,11 +119,31 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Goods price: min      max";
             // 
+            // minPriceValueLabel
+            // 
+            this.minPriceValueLabel.AutoSize = true;
+            this.minPriceValueLabel.Location = new System.Drawing.Point(531, 67);
+            this.minPriceValueLabel.Name = "minPriceValueLabel";
+            this.minPriceValueLabel.Size = new System.Drawing.Size(50, 20);
+            this.minPriceValueLabel.TabIndex = 8;
+            this.minPriceValueLabel.Text = "label2";
+            // 
+            // maxPriceValueLabel
+            // 
+            this.maxPriceValueLabel.AutoSize = true;
+            this.maxPriceValueLabel.Location = new System.Drawing.Point(650, 67);
+            this.maxPriceValueLabel.Name = "maxPriceValueLabel";
+            this.maxPriceValueLabel.Size = new System.Drawing.Size(50, 20);
+            this.maxPriceValueLabel.TabIndex = 9;
+            this.maxPriceValueLabel.Text = "label2";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 452);
+            this.Controls.Add(this.maxPriceValueLabel);
+            this.Controls.Add(this.minPriceValueLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.maxPriceTrackBar);
             this.Controls.Add(this.minPriceTrackBar);
@@ -147,5 +171,7 @@
         private TrackBar minPriceTrackBar;
         private TrackBar maxPriceTrackBar;
         private Label label1;
+        private Label minPriceValueLabel;
+        private Label maxPriceValueLabel;
     }
 }
