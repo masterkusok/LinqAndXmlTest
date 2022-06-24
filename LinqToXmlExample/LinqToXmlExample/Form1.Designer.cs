@@ -84,6 +84,8 @@
             // GoodTypeComboBox
             // 
             this.GoodTypeComboBox.FormattingEnabled = true;
+            this.GoodTypeComboBox.Items.AddRange(new object[] {
+            "all"});
             this.GoodTypeComboBox.Location = new System.Drawing.Point(361, 2);
             this.GoodTypeComboBox.Name = "GoodTypeComboBox";
             this.GoodTypeComboBox.Size = new System.Drawing.Size(151, 28);

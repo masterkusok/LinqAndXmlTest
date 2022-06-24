@@ -1,12 +1,12 @@
 using NOLinqToXmlExample;
-using System.Net;
-using System.Text;
 using System.Xml;
 
 namespace LinqToXmlExample
 {
     public partial class Form1 : Form
     {
+        private const string _alphabet = "abcdefghijklmnopqrstuvwxyz";
+
         private List<Product> _allProducts = new List<Product>();
         private List<Product> _selectedProducts = new List<Product>();
         private List<string> _productTypes = new List<string>();
@@ -44,7 +44,6 @@ namespace LinqToXmlExample
             catch (Exception ex)
             {
                 MessageBox.Show($"Error during loading products from XML: \n {ex}");
-
             }
         }
 
@@ -111,6 +110,7 @@ namespace LinqToXmlExample
 
             string choosenType = string.Empty;
             string choosenSort = string.Empty;
+            string searchKeyword = string.Empty;
 
             if (GoodTypeComboBox.SelectedItem != null)
                 choosenType = GoodTypeComboBox.SelectedItem.ToString() ?? string.Empty;
@@ -118,13 +118,17 @@ namespace LinqToXmlExample
             if (SortComboBox.SelectedItem != null)
                 choosenSort = SortComboBox.SelectedItem.ToString() ?? string.Empty;
 
+            if (!SearchTextBox.Text.Equals("Search...") && !string.IsNullOrEmpty(SearchTextBox.Text)) 
+                searchKeyword = SearchTextBox.Text;
+
             LeaveOnlyNeccessaryProductTypeInList(choosenType);
             SortProductList(choosenSort);
+            ApplySearchByKeyWord(searchKeyword);
         }
 
         private void LeaveOnlyNeccessaryProductTypeInList(string choosenType)
         {
-            if (string.IsNullOrEmpty(choosenType))
+            if (string.IsNullOrEmpty(choosenType) || choosenType == "all")
             {
                 CopyAllProductsToSelectedProducts();
                 return;
@@ -163,19 +167,23 @@ namespace LinqToXmlExample
             }
         }
 
-        private void PriceAscendingSort()
+        private void Swap(int i, int j)
         {
             Product bubble;
+            bubble = _selectedProducts[j].Clone();
+            _selectedProducts[j] = _selectedProducts[i].Clone();
+            _selectedProducts[i] = bubble;
+        }
 
+        private void PriceAscendingSort()
+        {
             for (int i = 0; i < _selectedProducts.Count; i++)
             {
                 for (int j = i; j < _selectedProducts.Count; j++)
                 {
                     if (_selectedProducts[i].Price > _selectedProducts[j].Price)
                     {
-                        bubble = _selectedProducts[j].Clone();
-                        _selectedProducts[j] = _selectedProducts[i].Clone();
-                        _selectedProducts[i] = bubble;
+                        Swap(i, j);
                     }
                 }
             }
@@ -183,59 +191,70 @@ namespace LinqToXmlExample
 
         private void PriceDescendingSort()
         {
-            Product bubble;
-
             for (int i = 0; i < _selectedProducts.Count; i++)
             {
                 for (int j = i; j < _selectedProducts.Count; j++)
                 {
                     if (_selectedProducts[i].Price < _selectedProducts[j].Price)
                     {
-                        bubble = _selectedProducts[j].Clone();
-                        _selectedProducts[j] = _selectedProducts[i].Clone();
-                        _selectedProducts[i] = bubble;
+                        Swap(i, j);
                     }
                 }
             }
+        }
+
+        private int GetAlphabetNumberOfProductName(Product product)
+        {
+            return _alphabet.IndexOf(product.Name.ToLower()[0]);
         }
 
         private void AlphabetOrderSort()
         {
-            string alphabet = "abcdefghijklmnopqrstuvwxyz";
-            Product bubble;
 
             for (int i = 0; i < _selectedProducts.Count; i++)
             {
                 for (int j = i; j < _selectedProducts.Count; j++)
                 {
-                    if (alphabet.IndexOf(_selectedProducts[i].Name.ToLower()[0]) >
-                        alphabet.IndexOf(_selectedProducts[j].Name.ToLower()[0]))
+                    if (GetAlphabetNumberOfProductName(_selectedProducts[i])>
+                        GetAlphabetNumberOfProductName(_selectedProducts[j]))
                     {
-                        bubble = _selectedProducts[j].Clone();
-                        _selectedProducts[j] = _selectedProducts[i].Clone();
-                        _selectedProducts[i] = bubble;
+                        Swap(i, j);
                     }
                 }
             }
         }
+
         private void ReversedAlphabetOrderSort()
         {
-            string alphabet = "abcdefghijklmnopqrstuvwxyz";
-            Product bubble;
-
+            
             for (int i = 0; i < _selectedProducts.Count; i++)
             {
                 for (int j = i; j < _selectedProducts.Count; j++)
                 {
-                    if (alphabet.IndexOf(_selectedProducts[i].Name.ToLower()[0]) <
-                        alphabet.IndexOf(_selectedProducts[j].Name.ToLower()[0]))
+                    if (GetAlphabetNumberOfProductName(_selectedProducts[i]) <
+                        GetAlphabetNumberOfProductName(_selectedProducts[j]))
                     {
-                        bubble = _selectedProducts[j].Clone();
-                        _selectedProducts[j] = _selectedProducts[i].Clone();
-                        _selectedProducts[i] = bubble;
+                        Swap(i, j);
                     }
                 }
             }
+        }
+
+        private void ApplySearchByKeyWord(string keyword)
+        {
+            for(int i = 0; i < _selectedProducts.Count; i++)
+            {
+                if (ProductNameDoesNotContainKeyword(_selectedProducts[i], keyword))
+                {
+                    _selectedProducts.Remove(_selectedProducts[i]);
+                    i--;
+                }
+            }
+        }
+
+        private bool ProductNameDoesNotContainKeyword(Product product, string keyword)
+        {
+            return !product.Name.ToLower().Contains(keyword.ToLower());
         }
     }
 }
