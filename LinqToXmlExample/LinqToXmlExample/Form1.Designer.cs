@@ -33,11 +33,11 @@
             this.SearchTextBox = new System.Windows.Forms.TextBox();
             this.ApplyFiltersBtn = new System.Windows.Forms.Button();
             this.GoodTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.minPriceTrackBar = new System.Windows.Forms.TrackBar();
+            this.maxPriceTrackBar = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minPriceTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxPriceTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // GoodsListView
@@ -52,6 +52,11 @@
             // SortComboBox
             // 
             this.SortComboBox.FormattingEnabled = true;
+            this.SortComboBox.Items.AddRange(new object[] {
+            "Price ascending",
+            "Price descending",
+            "Alphabet order",
+            "Reversed alphabet order"});
             this.SortComboBox.Location = new System.Drawing.Point(0, 31);
             this.SortComboBox.Name = "SortComboBox";
             this.SortComboBox.Size = new System.Drawing.Size(151, 28);
@@ -74,6 +79,7 @@
             this.ApplyFiltersBtn.TabIndex = 3;
             this.ApplyFiltersBtn.Text = "Apply";
             this.ApplyFiltersBtn.UseVisualStyleBackColor = true;
+            this.ApplyFiltersBtn.Click += new System.EventHandler(this.ApplyFiltersBtn_Click);
             // 
             // GoodTypeComboBox
             // 
@@ -84,19 +90,19 @@
             this.GoodTypeComboBox.TabIndex = 4;
             this.GoodTypeComboBox.Text = "Type of good";
             // 
-            // trackBar1
+            // minPriceTrackBar
             // 
-            this.trackBar1.Location = new System.Drawing.Point(547, 31);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(92, 56);
-            this.trackBar1.TabIndex = 5;
+            this.minPriceTrackBar.Location = new System.Drawing.Point(547, 31);
+            this.minPriceTrackBar.Name = "minPriceTrackBar";
+            this.minPriceTrackBar.Size = new System.Drawing.Size(92, 56);
+            this.minPriceTrackBar.TabIndex = 5;
             // 
-            // trackBar2
+            // maxPriceTrackBar
             // 
-            this.trackBar2.Location = new System.Drawing.Point(629, 31);
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(109, 56);
-            this.trackBar2.TabIndex = 6;
+            this.maxPriceTrackBar.Location = new System.Drawing.Point(629, 31);
+            this.maxPriceTrackBar.Name = "maxPriceTrackBar";
+            this.maxPriceTrackBar.Size = new System.Drawing.Size(109, 56);
+            this.maxPriceTrackBar.TabIndex = 6;
             // 
             // label1
             // 
@@ -113,8 +119,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(750, 452);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.trackBar2);
-            this.Controls.Add(this.trackBar1);
+            this.Controls.Add(this.maxPriceTrackBar);
+            this.Controls.Add(this.minPriceTrackBar);
             this.Controls.Add(this.GoodTypeComboBox);
             this.Controls.Add(this.ApplyFiltersBtn);
             this.Controls.Add(this.SearchTextBox);
@@ -122,8 +128,8 @@
             this.Controls.Add(this.GoodsListView);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.minPriceTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxPriceTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,8 +142,8 @@
         private TextBox SearchTextBox;
         private Button ApplyFiltersBtn;
         private ComboBox GoodTypeComboBox;
-        private TrackBar trackBar1;
-        private TrackBar trackBar2;
+        private TrackBar minPriceTrackBar;
+        private TrackBar maxPriceTrackBar;
         private Label label1;
     }
 }
