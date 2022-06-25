@@ -83,10 +83,11 @@ namespace LinqToXmlExample
 
         private void GetProductTypesFromList()
         {
-            List<string> types = _allProducts.Select(product => product.Type).ToList();
-            foreach(string type in types.Distinct())
+            foreach (Product product in _selectedProducts)
             {
-                GoodTypeComboBox.Items.Add(type);
+                if (_productTypes.Contains(product.Type))
+                    continue;
+                _productTypes.Add(product.Type);
             }
         }
 
@@ -100,16 +101,46 @@ namespace LinqToXmlExample
 
         private void SetTrackBarMinAndMaxValues()
         {
-            minPriceTrackBar.Minimum = _allProducts.Min(product => product.Price);
-            minPriceTrackBar.Maximum = (int)_allProducts.Average(product => product.Price);
+            minPriceTrackBar.Minimum = GetLowestProductPrice();
+            minPriceTrackBar.Maximum = GetMidProductPrice();
 
-            maxPriceTrackBar.Minimum = (int)_allProducts.Average(product => product.Price);
-            maxPriceTrackBar.Maximum = _allProducts.Max(product => product.Price);
+            maxPriceTrackBar.Minimum = GetMidProductPrice();
+            maxPriceTrackBar.Maximum = GetHighestProductPrice();
 
             maxPriceTrackBar.Value = maxPriceTrackBar.Maximum;
 
             minPriceValueLabel.Text = minPriceTrackBar.Value.ToString() + "$";
             maxPriceValueLabel.Text = maxPriceTrackBar.Value.ToString() + "$";
+        }
+
+        private int GetLowestProductPrice()
+        {
+            int lowest = int.MaxValue;
+            foreach(Product product in _allProducts)
+            {
+                lowest = Math.Min(lowest, product.Price);
+            }
+            return lowest;
+        }
+
+        private int GetHighestProductPrice()
+        {
+            int highest = 0;
+            foreach (Product product in _allProducts)
+            {
+                highest = Math.Max(highest, product.Price);
+            }
+            return highest;
+        }
+
+        private int GetMidProductPrice()
+        {
+            int average = 0;
+            foreach(Product product in _allProducts)
+            {
+                average += product.Price;
+            }
+            return average/_allProducts.Count();
         }
 
         private void ApplyFiltersBtn_Click(object sender, EventArgs e)
@@ -149,7 +180,11 @@ namespace LinqToXmlExample
                 return;
             }
 
-            _selectedProducts = _allProducts.Where(product => product.Type.Equals(choosenType)).ToList();
+            foreach (Product product in _allProducts)
+            {
+                if (product.Type == choosenType)
+                    _selectedProducts.Add(product);
+            }
         }
 
         private void ApplyPriceFilter()
@@ -157,8 +192,19 @@ namespace LinqToXmlExample
             int minPrice = minPriceTrackBar.Value;
             int maxPrice = maxPriceTrackBar.Value;
 
-            _selectedProducts = _selectedProducts.
-                Where(product => product.Price >= minPrice && product.Price <= maxPrice).ToList();
+            for(int i = 0; i < _selectedProducts.Count; i++)
+            {
+                if(ProductPriceIsOutOfPriceRange(_selectedProducts[i], minPrice, maxPrice))
+                {
+                    _selectedProducts.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private bool ProductPriceIsOutOfPriceRange(Product product, int minPrice, int maxPrice)
+        {
+            return product.Price > maxPrice || product.Price < minPrice;
         }
 
         private void SortProductList(string choosenSort)
@@ -167,26 +213,60 @@ namespace LinqToXmlExample
             {
                 case "Price ascending":
                     {
-                        _selectedProducts = _selectedProducts.OrderBy(product => product.Price).ToList();
+                        PriceAscendingSort();
                         break;
                     }
                 case "Price descending":
                     {
-                        _selectedProducts = _selectedProducts.OrderByDescending(product => product.Price).ToList();
+                        PriceDescendingSort();
                         break;
                     }
                 case "Alphabet order":
                     {
-                        _selectedProducts = 
-                            _selectedProducts.OrderBy(product => GetAlphabetNumberOfProductName(product)).ToList();
+                        AlphabetOrderSort();
                         break;
                     }
                 case "Reversed alphabet order":
                     {
-                        _selectedProducts = 
-                            _selectedProducts.OrderByDescending(product => GetAlphabetNumberOfProductName(product)).ToList();
+                        ReversedAlphabetOrderSort();
                         break;
                     }
+            }
+        }
+
+        private void Swap(int i, int j)
+        {
+            Product bubble;
+            bubble = _selectedProducts[j].Clone();
+            _selectedProducts[j] = _selectedProducts[i].Clone();
+            _selectedProducts[i] = bubble;
+        }
+
+        private void PriceAscendingSort()
+        {
+            for (int i = 0; i < _selectedProducts.Count; i++)
+            {
+                for (int j = i; j < _selectedProducts.Count; j++)
+                {
+                    if (_selectedProducts[i].Price > _selectedProducts[j].Price)
+                    {
+                        Swap(i, j);
+                    }
+                }
+            }
+        }
+
+        private void PriceDescendingSort()
+        {
+            for (int i = 0; i < _selectedProducts.Count; i++)
+            {
+                for (int j = i; j < _selectedProducts.Count; j++)
+                {
+                    if (_selectedProducts[i].Price < _selectedProducts[j].Price)
+                    {
+                        Swap(i, j);
+                    }
+                }
             }
         }
 
@@ -195,14 +275,53 @@ namespace LinqToXmlExample
             return _alphabet.IndexOf(product.Name.ToLower()[0]);
         }
 
-        private void ApplySearchByKeyWord(string keyword)
+        private void AlphabetOrderSort()
         {
-            _selectedProducts = _selectedProducts.Where(product => ProductNameContainsKeyword(product, keyword)).ToList();
+
+            for (int i = 0; i < _selectedProducts.Count; i++)
+            {
+                for (int j = i; j < _selectedProducts.Count; j++)
+                {
+                    if (GetAlphabetNumberOfProductName(_selectedProducts[i])>
+                        GetAlphabetNumberOfProductName(_selectedProducts[j]))
+                    {
+                        Swap(i, j);
+                    }
+                }
+            }
         }
 
-        private bool ProductNameContainsKeyword(Product product, string keyword)
+        private void ReversedAlphabetOrderSort()
         {
-            return product.Name.ToLower().Contains(keyword.ToLower());
+            
+            for (int i = 0; i < _selectedProducts.Count; i++)
+            {
+                for (int j = i; j < _selectedProducts.Count; j++)
+                {
+                    if (GetAlphabetNumberOfProductName(_selectedProducts[i]) <
+                        GetAlphabetNumberOfProductName(_selectedProducts[j]))
+                    {
+                        Swap(i, j);
+                    }
+                }
+            }
+        }
+
+        private void ApplySearchByKeyWord(string keyword)
+        {
+            for(int i = 0; i < _selectedProducts.Count; i++)
+            {
+                if (ProductNameDoesNotContainKeyword(_selectedProducts[i], keyword))
+                {
+                    _selectedProducts.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private bool ProductNameDoesNotContainKeyword(Product product, string keyword)
+        {
+            return !product.Name.ToLower().Contains(keyword.ToLower());
         }
 
         private void minPriceTrackBar_ValueChanged(object sender, EventArgs e)
