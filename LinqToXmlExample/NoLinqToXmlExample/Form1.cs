@@ -1,5 +1,5 @@
 using NOLinqToXmlExample;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace LinqToXmlExample
 {
@@ -26,26 +26,30 @@ namespace LinqToXmlExample
         {
             try
             {
-                string xmlPath = $"{Directory.GetCurrentDirectory()}/Products.xml";
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(xmlPath);
-                XmlElement root = xmlDoc.DocumentElement;
-                foreach (XmlNode node in root)
-                {
-                    Product product = new Product();
-                    product.Name = node.Attributes["Name"].Value;
-                    product.ProductID = int.Parse(node.Attributes["Id"].Value);
-                    product.Type = node.Attributes["Type"].Value;
-                    product.ImageUrl = node.Attributes["Url"].Value;
-                    product.Price = int.Parse(node.Attributes["Price"].Value);
-                    _allProducts.Add(product);
-                }
+                LoadProductsFromXmlToList();
                 CopyAllProductsToSelectedProducts();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error during loading products from XML: \n {ex}");
             }
+        }
+
+        private void LoadProductsFromXmlToList()
+        {
+            string xmlPath = $"{Directory.GetCurrentDirectory()}/Products.xml";
+            XDocument xmlDoc = XDocument.Load(xmlPath);
+            XElement root = xmlDoc.Element("Products");
+
+            _allProducts = root.Descendants("product").Select(prod =>
+            new Product()
+            {
+                Name = prod.Attribute("Name").Value,
+                Type = prod.Attribute("Type").Value,
+                Price = int.Parse(prod.Attribute("Price").Value),
+                ProductID = int.Parse(prod.Attribute("Id").Value),
+                ImageUrl = Name = prod.Attribute("Url").Value,
+            }).ToList();
         }
 
         private void CopyAllProductsToSelectedProducts()
