@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToXmlExample", "LinqToX
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NOLinqToXmlExample", "NoLinqToXmlExample\NOLinqToXmlExample.csproj", "{117EED8F-39AA-4CE5-B0BE-A3AE80F2D415}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFxLinqToXmlExample", "EFxLinqToXmlExample\EFxLinqToXmlExample.csproj", "{53836434-EE82-4CB3-B721-F108C1E6FB3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{117EED8F-39AA-4CE5-B0BE-A3AE80F2D415}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{117EED8F-39AA-4CE5-B0BE-A3AE80F2D415}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{117EED8F-39AA-4CE5-B0BE-A3AE80F2D415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53836434-EE82-4CB3-B721-F108C1E6FB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53836434-EE82-4CB3-B721-F108C1E6FB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53836434-EE82-4CB3-B721-F108C1E6FB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53836434-EE82-4CB3-B721-F108C1E6FB3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
